@@ -1,0 +1,76 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Azure AD OAuth Token API",
+    "version": "1.0.0"
+  },
+  "host": "login.microsoftonline.com",
+  "basePath": "/",
+  "schemes": ["https"],
+  "paths": {
+    "/{tenantId}/oauth2/v2.0/token": {
+      "post": {
+        "summary": "Get OAuth2 Token",
+        "description": "Retrieves an Azure AD OAuth2 access token for a Service Principal.",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Azure AD tenant ID"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "default": "application/x-www-form-urlencoded"
+          },
+          {
+            "name": "grant_type",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "default": "client_credentials"
+          },
+          {
+            "name": "client_id",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Service Principal App (client) ID"
+          },
+          {
+            "name": "client_secret",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Service Principal client secret"
+          },
+          {
+            "name": "scope",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "default": "https://analysis.windows.net/powerbi/api/.default"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token Response",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token_type": { "type": "string" },
+                "expires_in": { "type": "integer" },
+                "ext_expires_in": { "type": "integer" },
+                "access_token": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
