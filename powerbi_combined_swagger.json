@@ -1,0 +1,173 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Power BI Dashboard Embed API",
+    "version": "1.0.0"
+  },
+  "host": "login.microsoftonline.com",
+  "schemes": ["https", "http"],
+  "paths": {
+    "/{tenantId}/oauth2/v2.0/token": {
+      "post": {
+        "summary": "Get Azure AD Token",
+        "description": "Get OAuth 2.0 token for Service Principal",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "default": "application/x-www-form-urlencoded"
+          },
+          {
+            "name": "grant_type",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "default": "client_credentials"
+          },
+          {
+            "name": "client_id",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "client_secret",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scope",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "default": "https://analysis.windows.net/powerbi/api/.default"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Access token",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token_type": { "type": "string" },
+                "expires_in": { "type": "integer" },
+                "ext_expires_in": { "type": "integer" },
+                "access_token": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "x-powerbi-host": {
+      "host": "api.powerbi.com"
+    },
+    "/v1.0/myorg/groups/{groupId}/dashboards/{dashboardId}": {
+      "get": {
+        "summary": "Get Dashboard Details",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "dashboardId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "default": "Bearer {access_token}"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dashboard info",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "displayName": { "type": "string" },
+                "embedUrl": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1.0/myorg/groups/{groupId}/dashboards/{dashboardId}/GenerateToken": {
+      "post": {
+        "summary": "Generate Embed Token for Dashboard",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "dashboardId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "default": "Bearer {access_token}"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "default": "application/json"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "accessLevel": {
+                  "type": "string",
+                  "default": "View"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Embed token",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": { "type": "string" },
+                "expiration": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
